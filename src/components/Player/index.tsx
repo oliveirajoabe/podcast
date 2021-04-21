@@ -32,6 +32,9 @@ export default function Player() {
                         <img src="/play.svg" alt="Tocar"/>
                     </button>
                     <button type="button">
+                        <img src="/play-next.svg" alt="Proximo"/>
+                    </button>
+                    <button type="button">
                         <img src="/repeat.svg" alt="Repetir"/>
                     </button>
                 </div>
