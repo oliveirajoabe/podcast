@@ -8,6 +8,8 @@ import { api } from '../services/api';
 import { convertDurationToTimeString } from '../utils/convertDurationToTimeString';
 
 import styles from './home.module.scss';
+import { useContext } from 'react';
+import { PlayerContext } from '../context/PlayerContext';
 
 interface Episode {
   id: string;
@@ -63,6 +65,8 @@ export const getStaticProps:GetStaticProps = async () => {
 // ===============
 export default function Home({latestEpisodes, allEpisodes}: HomeProps) {
   // props.episodes[0].members;
+  const { play } = useContext(PlayerContext);
+  
   return (
     <div className={styles.homepage}>
         <section className={styles.latestEpisodes}>
@@ -82,7 +86,7 @@ export default function Home({latestEpisodes, allEpisodes}: HomeProps) {
                     <span>{episode.durationAsString}</span>
                   </div>
 
-                  <button type="button">
+                  <button type="button" onClick={()=>play(episode)}>
                     <img src="/play-green.svg" alt="Tocar Episódio"/>
                   </button>
                 </li>

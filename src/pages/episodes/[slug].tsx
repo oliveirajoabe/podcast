@@ -27,19 +27,35 @@ interface EpisodeProps {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+    const { data } = await api.get('episodes', {
+        params: {
+            _limit:2,
+            _sort:'published_at',
+            _order: 'desc',
+        }
+    });
+
+    const paths = data.map(episode => {
+        return { 
+            params: {
+                slug: episode.id,
+            }
+        }
+    })
+
     return {
-        paths: [],
+        paths,
         fallback: 'blocking'
     }
 }
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const { slug } = ctx.params; //pega os dados do parametro, variavel segue o mesmo nome dado ao arquivo
-    
-    const { data } = await api.get(`/episodes/${slug}`);
-    
 
-    const episode = {        
+    const { data } = await api.get(`/episodes/${slug}`);
+
+
+    const episode = {
         id: data.id,
         title: data.title,
         thumbnail: data.thumbnail,
@@ -59,26 +75,26 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 }
 
 
-export default function Episode({ episode }: EpisodeProps ) {
+export default function Episode({ episode }: EpisodeProps) {
     // const router = useRouter();
     // console.log(router.query.slug);
-    
+
     return (
-       <div className={styles.episode}>
+        <div className={styles.episode}>
             <div className={styles.thumbnailContainer}>
                 <button type="button">
                     <Link href="/">
-                        <img src="/arrow-left.svg" alt="Voltar"/>
+                        <img src="/arrow-left.svg" alt="Voltar" />
                     </Link>
                 </button>
-                
-                <Image width={700} height={160} src={episode.thumbnail} objectFit="cover"/>
-                
+
+                <Image width={700} height={160} src={episode.thumbnail} objectFit="cover" />
+
                 <button type="button">
-                    <img src="/play.svg" alt="Tocar Episódio"/>
+                    <img src="/play.svg" alt="Tocar Episódio" />
                 </button>
-           </div>
-                
+            </div>
+
             <header>
                 <h1>{episode.title}</h1>
                 <span>{episode.members}</span>
@@ -87,6 +103,6 @@ export default function Episode({ episode }: EpisodeProps ) {
             </header>
 
             <div className={styles.description} dangerouslySetInnerHTML={{ __html: episode.description }} />
-       </div>
+        </div>
     )
 }
