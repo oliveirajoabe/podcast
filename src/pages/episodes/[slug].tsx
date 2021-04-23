@@ -2,9 +2,11 @@ import format from 'date-fns/format';
 import { ptBR } from 'date-fns/locale';
 import parseISO from 'date-fns/parseISO';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { usePlayer } from '../../context/PlayerContext';
 import { api } from '../../services/api';
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString';
 
@@ -74,13 +76,16 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     }
 }
 
-
 export default function Episode({ episode }: EpisodeProps) {
     // const router = useRouter();
     // console.log(router.query.slug);
+    const { play } = usePlayer();
 
     return (
         <div className={styles.episode}>
+            <Head>
+                <title>{episode.title}</title>
+            </Head>
             <div className={styles.thumbnailContainer}>
                 <button type="button">
                     <Link href="/">
@@ -90,7 +95,7 @@ export default function Episode({ episode }: EpisodeProps) {
 
                 <Image width={700} height={160} src={episode.thumbnail} objectFit="cover" />
 
-                <button type="button">
+                <button type="button" onClick={()=> play(episode)}>
                     <img src="/play.svg" alt="Tocar Episódio" />
                 </button>
             </div>
